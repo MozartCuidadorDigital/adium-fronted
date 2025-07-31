@@ -27,5 +27,7 @@ export default defineConfig({
         main: 'index.html'
       }
     }
-  }
+  },
+  root: '.',
+  publicDir: 'public'
 }) 
