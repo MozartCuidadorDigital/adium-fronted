@@ -24,8 +24,7 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       input: {
-        main: 'index.html',
-        totem: 'totem.html'
+        main: 'index.html'
       }
     }
   }
