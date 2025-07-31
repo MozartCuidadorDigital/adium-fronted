@@ -1,0 +1,187 @@
+/* Voice Player Styles */
+.voice-player {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.audio-indicator {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(52, 152, 219, 0.9);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 25px;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  backdrop-filter: blur(10px);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.audio-waves {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.wave {
+  width: 3px;
+  height: 20px;
+  background: white;
+  border-radius: 2px;
+  animation: wave 1.5s ease-in-out infinite;
+}
+
+.wave:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.wave:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.wave:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.wave:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.wave:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+@keyframes wave {
+  0%, 100% {
+    height: 20px;
+  }
+  50% {
+    height: 40px;
+  }
+}
+
+.audio-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.audio-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.audio-control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.audio-control-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.audio-control-btn:active {
+  transform: scale(0.95);
+}
+
+.audio-control-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.pause-btn {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.stop-btn {
+  background: rgba(231, 76, 60, 0.8);
+}
+
+.stop-btn:hover {
+  background: rgba(231, 76, 60, 1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .voice-player {
+    bottom: 10px;
+    right: 10px;
+  }
+  
+  .audio-indicator {
+    padding: 0.75rem 1rem;
+    gap: 0.75rem;
+  }
+  
+  .wave {
+    width: 2px;
+    height: 15px;
+  }
+  
+  @keyframes wave {
+    0%, 100% {
+      height: 15px;
+    }
+    50% {
+      height: 30px;
+    }
+  }
+  
+  .audio-text {
+    font-size: 0.8rem;
+  }
+  
+  .audio-control-btn {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .audio-control-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .audio-indicator {
+    background: #000;
+    border: 2px solid #fff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .audio-indicator {
+    animation: none;
+  }
+  
+  .wave {
+    animation: none;
+  }
+} 

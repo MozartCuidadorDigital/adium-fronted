@@ -54,6 +54,7 @@ const AudioPlayer = ({ isConnected, onStatusUpdate, onError }) => {
       audio.onended = () => {
         onStatusUpdate('ready');
         URL.revokeObjectURL(audioUrl);
+        audioRef.current = null;
       };
       
       audio.onerror = (error) => {
@@ -61,6 +62,7 @@ const AudioPlayer = ({ isConnected, onStatusUpdate, onError }) => {
         onError('Error reproduciendo audio');
         onStatusUpdate('ready');
         URL.revokeObjectURL(audioUrl);
+        audioRef.current = null;
       };
       
       // Store reference for cleanup
@@ -77,6 +79,7 @@ const AudioPlayer = ({ isConnected, onStatusUpdate, onError }) => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
+      audioRef.current.src = '';
       audioRef.current = null;
     }
   };

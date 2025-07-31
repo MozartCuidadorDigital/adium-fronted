@@ -9,8 +9,8 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        changeOrigin: true
+        // Removed the rewrite rule to keep /api in the path
       },
       '/ws': {
         target: 'ws://localhost:3001',
@@ -21,6 +21,12 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true
+    sourcemap: true,
+    rollupOptions: {
+      input: {
+        main: 'index.html',
+        totem: 'totem.html'
+      }
+    }
   }
 }) 
