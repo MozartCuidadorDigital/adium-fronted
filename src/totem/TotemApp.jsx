@@ -222,7 +222,7 @@ const TotemApp = () => {
       <header className="totem-header">
         <div className="logo-section">
           <div className="logo">
-            <img src="/Adium-1.png" alt="Adium Logo" />
+            <img src="/src/Adium-1.png" alt="Adium Logo" />
           </div>
           <div className="brand">
             
