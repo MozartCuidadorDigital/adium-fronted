@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-const API_BASE_URL = '/api/totem';
+const API_BASE_URL = 'https://adium-backend.mozartai.com.co/api/totem';
 
 export const useTotemAPI = () => {
   const [isLoading, setIsLoading] = useState(false);
