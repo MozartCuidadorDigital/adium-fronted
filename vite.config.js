@@ -8,12 +8,12 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'https://adium-backend.mozartai.com.co',
         changeOrigin: true
         // Removed the rewrite rule to keep /api in the path
       },
       '/ws': {
-        target: 'ws://localhost:3001',
+        target: 'wss://adium-backend.mozartai.com.co',
         ws: true,
         changeOrigin: true
       }

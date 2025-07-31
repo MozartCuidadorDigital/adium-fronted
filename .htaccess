@@ -1,3 +1,0 @@
-DirectoryIndex totem.html
-RewriteEngine On
-RewriteRule ^$ /totem.html [L] 
