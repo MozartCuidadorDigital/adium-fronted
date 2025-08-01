@@ -3,6 +3,7 @@ import ChatInterface from './components/ChatInterface';
 import PredefinedQuestions from './components/PredefinedQuestions';
 import VoicePlayer from './components/VoicePlayer';
 import { useTotemAPI } from './hooks/useTotemAPI';
+import { MdRefresh } from 'react-icons/md';
 import './TotemApp.css';
 
 const TotemApp = () => {
@@ -10,8 +11,9 @@ const TotemApp = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentAudioUrl, setCurrentAudioUrl] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [streamingText, setStreamingText] = useState('');
-  const [isStreaming, setIsStreaming] = useState(false);
+  // Quitar variables de streaming que ya no se necesitan
+  // const [streamingText, setStreamingText] = useState('');
+  // const [isStreaming, setIsStreaming] = useState(false);
   
   const { 
     sendQuestion, 
@@ -21,7 +23,8 @@ const TotemApp = () => {
   } = useTotemAPI();
 
   const audioRef = useRef(null);
-  const streamingIntervalRef = useRef(null);
+  // Quitar streamingIntervalRef que ya no se necesita
+  // const streamingIntervalRef = useRef(null);
 
   useEffect(() => {
     // Cargar preguntas predefinidas al iniciar
@@ -42,14 +45,15 @@ const TotemApp = () => {
     };
   }, []);
 
-  useEffect(() => {
-    // Limpiar intervalo de streaming cuando se desmonte
-    return () => {
-      if (streamingIntervalRef.current) {
-        clearInterval(streamingIntervalRef.current);
-      }
-    };
-  }, []);
+  // Quitar useEffect de limpieza de streaming que ya no se necesita
+  // useEffect(() => {
+  //   // Limpiar intervalo de streaming cuando se desmonte
+  //   return () => {
+  //     if (streamingIntervalRef.current) {
+  //       clearInterval(streamingIntervalRef.current);
+  //     }
+  //   };
+  // }, []);
 
   const handleQuestionSubmit = async (question) => {
     if (!question.trim() || isProcessing) return;
@@ -57,8 +61,9 @@ const TotemApp = () => {
     console.log('🔄 Iniciando procesamiento de pregunta:', question);
     
     setIsProcessing(true);
-    setIsStreaming(true);
-    setStreamingText('');
+    // Quitar streaming - no más isStreaming ni streamingText
+    // setIsStreaming(true);
+    // setStreamingText('');
     
     // Agregar mensaje del usuario
     const userMessage = {
@@ -75,7 +80,7 @@ const TotemApp = () => {
       console.log('📥 Respuesta recibida:', response);
       
       if (response && response.success) {
-        console.log('✅ Respuesta exitosa, iniciando streaming...');
+        console.log('✅ Respuesta exitosa, mostrando mensaje completo...');
         
         // Reproducir audio inmediatamente si está disponible
         if (response.audioUrl && audioRef.current) {
@@ -91,10 +96,7 @@ const TotemApp = () => {
           setCurrentAudioUrl(response.audioUrl);
         }
         
-        // Iniciar streaming de texto (audio ya está reproduciéndose)
-        await simulateTextAndAudioStreaming(response.text, null);
-        
-        // Agregar respuesta del asistente
+        // Agregar respuesta del asistente COMPLETA inmediatamente (sin streaming)
         const assistantMessage = {
           id: Date.now() + 1,
           type: 'assistant',
@@ -107,66 +109,71 @@ const TotemApp = () => {
         console.log('✅ Mensaje del asistente agregado correctamente');
       } else {
         console.error('❌ Respuesta fallida:', response);
+        
         // Agregar mensaje de error
         const errorMessage = {
           id: Date.now() + 1,
           type: 'error',
-          text: response?.error || 'Lo siento, ocurrió un error. Por favor, intenta de nuevo.',
+          text: 'Lo siento, hubo un error procesando tu pregunta. Por favor, intenta de nuevo.',
           timestamp: new Date()
         };
         setMessages(prev => [...prev, errorMessage]);
       }
     } catch (error) {
       console.error('❌ Error en handleQuestionSubmit:', error);
+      
+      // Agregar mensaje de error
       const errorMessage = {
         id: Date.now() + 1,
         type: 'error',
-        text: 'Error de conexión. Por favor, verifica tu conexión e intenta de nuevo.',
+        text: 'Lo siento, hubo un error de conexión. Por favor, intenta de nuevo.',
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       console.log('🏁 Finalizando procesamiento...');
       setIsProcessing(false);
-      setIsStreaming(false);
-      setStreamingText('');
+      // Quitar streaming
+      // setIsStreaming(false);
+      // setStreamingText('');
     }
   };
 
-  const simulateTextAndAudioStreaming = (fullText, audioUrl) => {
-    return new Promise((resolve) => {
-      console.log('🎬 Iniciando streaming de texto');
-      const words = fullText.split(' ');
-      let currentIndex = 0;
-      
-      // Solo manejar audio si se proporciona audioUrl
-      if (audioUrl && audioRef.current) {
-        console.log('🎵 Reproduciendo audio...');
-        audioRef.current.src = audioUrl;
-        
-        // Manejar la reproducción de audio de forma segura
-        const playPromise = audioRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(error => {
-            console.error('Error reproduciendo audio:', error);
-          });
-        }
-        setIsPlaying(true);
-      }
-      
-      streamingIntervalRef.current = setInterval(() => {
-        if (currentIndex < words.length) {
-          setStreamingText(words.slice(0, currentIndex + 1).join(' '));
-          currentIndex++;
-        } else {
-          clearInterval(streamingIntervalRef.current);
-          setStreamingText(fullText);
-          console.log('✅ Streaming completado');
-          resolve();
-        }
-      }, 50); // Velocidad de streaming
-    });
-  };
+  // Quitar función de streaming que ya no se necesita
+  // const simulateTextAndAudioStreaming = (fullText, audioUrl) => {
+  //   return new Promise((resolve) => {
+  //     console.log('🎬 Iniciando streaming de texto');
+  //     const words = fullText.split(' ');
+  //     let currentIndex = 0;
+  //     
+  //     // Solo manejar audio si se proporciona audioUrl
+  //     if (audioUrl && audioRef.current) {
+  //       console.log('🎵 Reproduciendo audio...');
+  //       audioRef.current.src = audioUrl;
+  //       
+  //       // Manejar la reproducción de audio de forma segura
+  //       const playPromise = audioRef.current.play();
+  //       if (playPromise !== undefined) {
+  //         playPromise.catch(error => {
+  //           console.error('Error reproduciendo audio:', error);
+  //         });
+  //       }
+  //       setIsPlaying(true);
+  //     }
+  //     
+  //     streamingIntervalRef.current = setInterval(() => {
+  //       if (currentIndex < words.length) {
+  //         setStreamingText(words.slice(0, currentIndex + 1).join(' '));
+  //         currentIndex++;
+  //       } else {
+  //         clearInterval(streamingIntervalRef.current);
+  //         setStreamingText(fullText);
+  //         console.log('✅ Streaming completado');
+  //         resolve();
+  //       }
+  //     }, 50); // Velocidad de streaming
+  //   });
+  // };
 
   const handlePredefinedQuestion = (question) => {
     handleQuestionSubmit(question);
@@ -176,7 +183,41 @@ const TotemApp = () => {
     setMessages([]);
     setCurrentAudioUrl(null);
     setIsPlaying(false);
-    setStreamingText('');
+    // setStreamingText(''); // Eliminado
+  };
+
+  const handleResetChat = () => {
+    console.log('🔄 Reseteando aplicación...');
+    
+    // Limpiar todo el estado
+    setMessages([]);
+    setCurrentAudioUrl(null);
+    setIsPlaying(false);
+    // setStreamingText(''); // Eliminado
+    setIsProcessing(false);
+    // setIsStreaming(false); // Eliminado
+    
+    // Detener cualquier audio que esté reproduciéndose
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    
+    // Limpiar intervalos de streaming
+    // if (streamingIntervalRef.current) { // Eliminado
+    //   clearInterval(streamingIntervalRef.current); // Eliminado
+    // }
+    
+    // Mostrar la pantalla de carga inicial
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
+      loadingScreen.classList.remove('hidden');
+    }
+    
+    // Opcional: recargar la página después de un pequeño delay
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   };
 
   const handleAudioEnd = () => {
@@ -225,18 +266,28 @@ const TotemApp = () => {
             <img src="/Adium-1.png" alt="Adium Logo" />
           </div>
           <div className="brand">
-            
             <p>The Power of GIP</p>
           </div>
         </div>
+        
+        {/* Reset Chat Button */}
+        <button
+          className="reset-chat-button"
+          onClick={handleResetChat}
+          title="Reset Chat - Volver al inicio"
+          aria-label="Reset Chat - Volver al inicio"
+        >
+          <MdRefresh size={20} />
+          <span>Reset Chat</span>
+        </button>
       </header>
 
       <main className="totem-main">
         <div className="chat-container">
           <ChatInterface 
             messages={messages}
-            streamingText={streamingText}
-            isStreaming={isStreaming}
+            // streamingText={streamingText} // Eliminado
+            // isStreaming={isStreaming} // Eliminado
             isProcessing={isProcessing}
             onQuestionSubmit={handleQuestionSubmit}
             onClearChat={handleClearChat}
