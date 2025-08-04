@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import ChatInterface from './components/ChatInterface';
 import PredefinedQuestions from './components/PredefinedQuestions';
 import VoicePlayer from './components/VoicePlayer';
+import Login from './components/Login';
 import { useTotemAPI } from './hooks/useTotemAPI';
-import { MdRefresh } from 'react-icons/md';
+import { MdRefresh, MdLogout } from 'react-icons/md';
 import './TotemApp.css';
 
 const TotemApp = () => {
@@ -11,6 +12,8 @@ const TotemApp = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentAudioUrl, setCurrentAudioUrl] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showMainScreen, setShowMainScreen] = useState(false);
   // Quitar variables de streaming que ya no se necesitan
   // const [streamingText, setStreamingText] = useState('');
   // const [isStreaming, setIsStreaming] = useState(false);
@@ -27,15 +30,36 @@ const TotemApp = () => {
   // const streamingIntervalRef = useRef(null);
 
   useEffect(() => {
-    // Cargar preguntas predefinidas al iniciar
-    getPredefinedQuestions();
+    // Verificar si el usuario ya está autenticado
+    const authStatus = localStorage.getItem('isAuthenticated');
+    if (authStatus === 'true') {
+      setIsAuthenticated(true);
+      // Ir directamente al chat después del login
+      setShowMainScreen(false);
+      
+      // Mostrar la pantalla de carga HTML si está autenticado
+      const loadingScreen = document.getElementById('loading-screen');
+      if (loadingScreen) {
+        loadingScreen.classList.remove('hidden');
+      }
+    }
   }, []);
 
   useEffect(() => {
-    // Escuchar el evento de inicio desde el HTML
+    // Solo cargar preguntas predefinidas si está autenticado
+    if (isAuthenticated) {
+      getPredefinedQuestions();
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    // Escuchar el evento de inicio desde el HTML solo si está autenticado
     const handleStartApp = () => {
-      console.log('🚀 Iniciando aplicación...');
-      handleQuestionSubmit("Hola");
+      if (isAuthenticated) {
+        console.log('🚀 Iniciando aplicación...');
+        setShowMainScreen(false); // Ocultar pantalla principal y mostrar chat
+        handleQuestionSubmit("Hola");
+      }
     };
 
     window.addEventListener('startApp', handleStartApp);
@@ -43,7 +67,32 @@ const TotemApp = () => {
     return () => {
       window.removeEventListener('startApp', handleStartApp);
     };
-  }, []);
+  }, [isAuthenticated]);
+
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+    setShowMainScreen(false); // Ir directamente al chat después del login
+    
+    // Mostrar la pantalla de carga HTML después del login
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
+      loadingScreen.classList.remove('hidden');
+    }
+    
+    // Cargar preguntas predefinidas después del login
+    getPredefinedQuestions();
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setShowMainScreen(false);
+    setMessages([]);
+    setCurrentAudioUrl(null);
+    setIsPlaying(false);
+    setIsProcessing(false);
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('user');
+  };
 
   // Quitar useEffect de limpieza de streaming que ya no se necesita
   // useEffect(() => {
@@ -260,53 +309,94 @@ const TotemApp = () => {
 
   return (
     <div className="totem-app">
-      <header className="totem-header">
-        <div className="logo-section">
-          <div className="logo">
-            <img src="/Adium-1.png" alt="Adium Logo" />
-          </div>
-          <div className="brand">
-            <p>The Power of GIP</p>
+      {!isAuthenticated ? (
+        <Login onLoginSuccess={handleLoginSuccess} />
+      ) : showMainScreen ? (
+        // Pantalla principal con botón "Iniciar"
+        <div className="main-screen">
+          <div className="main-screen-content">
+            <div className="main-logo">
+              <img src="/Adium-1.png" alt="Adium Logo" />
+            </div>
+            <div className="main-brand">
+              <p>The Power of GIP</p>
+            </div>
+            <button
+              className="start-app-button"
+              onClick={() => {
+                setShowMainScreen(false);
+                handleQuestionSubmit("Hola");
+              }}
+              title="Iniciar Aplicación"
+              aria-label="Iniciar Aplicación"
+            >
+              Iniciar
+            </button>
           </div>
         </div>
-        
-        {/* Reset Chat Button */}
-        <button
-          className="reset-chat-button"
-          onClick={handleResetChat}
-          title="Reset Chat - Volver al inicio"
-          aria-label="Reset Chat - Volver al inicio"
-        >
-          <MdRefresh size={20} />
-          <span>Reset Chat</span>
-        </button>
-      </header>
+      ) : (
+        // Chat interface
+        <>
+          <header className="totem-header">
+            <div className="logo-section">
+              <div className="logo">
+                <img src="/Adium-1.png" alt="Adium Logo" />
+              </div>
+              <div className="brand">
+                <p>The Power of GIP</p>
+              </div>
+            </div>
+            
+            {/* Reset Chat Button */}
+            <button
+              className="reset-chat-button"
+              onClick={handleResetChat}
+              title="Reset Chat - Volver al inicio"
+              aria-label="Reset Chat - Volver al inicio"
+            >
+              <MdRefresh size={20} />
+              <span>Reset Chat</span>
+            </button>
 
-      <main className="totem-main">
-        <div className="chat-container">
-          <ChatInterface 
-            messages={messages}
-            // streamingText={streamingText} // Eliminado
-            // isStreaming={isStreaming} // Eliminado
-            isProcessing={isProcessing}
-            onQuestionSubmit={handleQuestionSubmit}
-            onClearChat={handleClearChat}
-            onReplayAudio={handleReplayAudio}
-            predefinedQuestions={predefinedQuestions}
-            onPredefinedQuestion={handlePredefinedQuestion}
+            {/* Logout Button */}
+            <button
+              className="logout-button"
+              onClick={handleLogout}
+              title="Cerrar Sesión"
+              aria-label="Cerrar Sesión"
+            >
+              <MdLogout size={20} />
+              <span>Logout</span>
+            </button>
+          </header>
+
+          <main className="totem-main">
+            <div className="chat-container">
+              <ChatInterface 
+                messages={messages}
+                // streamingText={streamingText} // Eliminado
+                // isStreaming={isStreaming} // Eliminado
+                isProcessing={isProcessing}
+                onQuestionSubmit={handleQuestionSubmit}
+                onClearChat={handleClearChat}
+                onReplayAudio={handleReplayAudio}
+                predefinedQuestions={predefinedQuestions}
+                onPredefinedQuestion={handlePredefinedQuestion}
+              />
+            </div>
+          </main>
+
+          {/* Audio para reproducción (tanto streaming como replay) */}
+          <VoicePlayer 
+            audioUrl={currentAudioUrl}
+            isPlaying={isPlaying}
+            onEnd={handleAudioEnd}
+            onPause={handleAudioPause}
+            onStop={handleAudioStop}
+            ref={audioRef}
           />
-        </div>
-      </main>
-
-      {/* Audio para reproducción (tanto streaming como replay) */}
-      <VoicePlayer 
-        audioUrl={currentAudioUrl}
-        isPlaying={isPlaying}
-        onEnd={handleAudioEnd}
-        onPause={handleAudioPause}
-        onStop={handleAudioStop}
-        ref={audioRef}
-      />
+        </>
+      )}
     </div>
   );
 };
