@@ -34,7 +34,7 @@
 /* Reverse Chat Styles */
 .messages-area.reverse-chat {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   overflow-y: auto;
   height: 100%;
   scroll-snap-type: y proximity;
@@ -42,7 +42,6 @@
   overscroll-behavior: contain;
   scroll-padding-top: 0;
   /* Prevenir scroll automático hacia abajo */
-  scroll-behavior: auto;
 }
 
 
