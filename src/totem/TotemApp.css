@@ -55,6 +55,9 @@
   text-align: center;
   width: 100%;
   pointer-events: none;
+  z-index: 1; /* Asegurar que esté por encima */
+  padding-left: 200px; /* Dar espacio al logo */
+  padding-right: 200px; /* Dar espacio a los botones */
 }
 
 .brand h1 {
@@ -67,10 +70,12 @@
 
 .brand p {
   margin: 0;
-  font-size: 1.2rem; /* Más grande para mayor visibilidad */
+  font-size: 1.6rem; /* Reducir un poco para que quepa */
   color: #34495e; /* Color más oscuro para mayor visibilidad */
-  font-weight: 600; /* Más bold para mayor visibilidad */
+  font-weight: 700; /* Más bold para mayor visibilidad */
   text-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Sombra sutil para mejor legibilidad */
+  letter-spacing: 0.3px; /* Reducir espaciado */
+  white-space: nowrap; /* Mantener en una línea */
 }
 
 /* Reset Chat Button */
@@ -218,11 +223,13 @@
 
 .main-brand p {
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 2.2rem; /* Más grande para mayor visibilidad */
+  font-weight: 700; /* Más bold para mayor visibilidad */
   color: white;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   margin-bottom: 3rem;
+  letter-spacing: 1px; /* Espaciado entre letras */
+  text-transform: uppercase; /* Convertir a mayúsculas */
 }
 
 .start-app-button {
@@ -263,8 +270,15 @@
     height: 70px;
   }
   
+  .brand {
+    padding-left: 160px; /* Reducir espacio en tablets */
+    padding-right: 160px;
+  }
+  
   .brand p {
-    font-size: 1.1rem;
+    font-size: 1.4rem; /* Reducir para tablets */
+    font-weight: 700;
+    white-space: nowrap;
   }
   
   .reset-chat-button {
@@ -291,9 +305,16 @@
     height: 60px;
   }
   
+  .brand {
+    padding-left: 140px; /* Reducir más en móviles */
+    padding-right: 140px;
+  }
+  
   .brand p {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.2rem; /* Reducir para móviles */
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
   }
   
   .reset-chat-button {
@@ -337,8 +358,9 @@
   }
   
   .main-brand p {
-    font-size: 1.2rem;
+    font-size: 1.8rem; /* Mantener grande en móviles */
     margin-bottom: 2rem;
+    letter-spacing: 0.8px;
   }
   
   .start-app-button {
@@ -358,9 +380,16 @@
     height: 50px;
   }
   
+  .brand {
+    padding-left: 120px; /* Reducir más en móviles pequeños */
+    padding-right: 120px;
+  }
+  
   .brand p {
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 1rem; /* Reducir para móviles pequeños */
+    font-weight: 700;
+    letter-spacing: 0.1px;
+    white-space: nowrap;
   }
   
   .reset-chat-button {
@@ -398,8 +427,9 @@
   }
   
   .main-brand p {
-    font-size: 1rem;
+    font-size: 1.5rem; /* Mantener legible en móviles pequeños */
     margin-bottom: 1.5rem;
+    letter-spacing: 0.5px;
   }
   
   .start-app-button {
