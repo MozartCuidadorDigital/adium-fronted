@@ -55,7 +55,7 @@ const Login = ({ onLoginSuccess }) => {
     await new Promise(resolve => setTimeout(resolve, 500));
     
     // Validación simple (en producción usar bcrypt.compare)
-    return username === 'admin' && password === 'mounjaro2025';
+    return username === 'admin' && password === '58)Ztv#/a3}h';
   };
 
   const togglePasswordVisibility = () => {
