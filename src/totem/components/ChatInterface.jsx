@@ -9,7 +9,9 @@ import {
   MdMic,
   MdSend,
   MdClose,
-  MdReplay
+  MdReplay,
+  MdChevronLeft,
+  MdChevronRight
 } from 'react-icons/md';
 import './ChatInterface.css';
 
@@ -28,12 +30,16 @@ const ChatInterface = ({
   const [inputText, setInputText] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [isAutoSending, setIsAutoSending] = useState(false);
+  const [showFaq, setShowFaq] = useState(false);
+  const [canScrollLeftState, setCanScrollLeftState] = useState(false);
+  const [canScrollRightState, setCanScrollRightState] = useState(false);
   const messagesEndRef = useRef(null);
   const messagesAreaRef = useRef(null);
   const inputRef = useRef(null);
   const recognitionRef = useRef(null);
+  const faqScrollRef = useRef(null);
 
-  // Función simplificada para scroll hacia arriba (donde están las flechas verdes)
+  // Función para scroll hacia arriba (donde están las flechas verdes)
   const scrollToTop = () => {
     if (messagesAreaRef.current) {
       console.log('🔄 scrollToTop() ejecutado');
@@ -45,6 +51,59 @@ const ChatInterface = ({
       console.log('📍 scrollTop después:', messagesAreaRef.current.scrollTop);
     }
   };
+
+  // Función para scroll horizontal de las preguntas frecuentes
+  const scrollFaq = (direction) => {
+    if (faqScrollRef.current) {
+      const scrollAmount = 300; // Scroll de 300px por click
+      const currentScroll = faqScrollRef.current.scrollLeft;
+      const newScroll = direction === 'left' 
+        ? Math.max(0, currentScroll - scrollAmount)
+        : currentScroll + scrollAmount;
+      
+      faqScrollRef.current.scrollTo({
+        left: newScroll,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Función para verificar si se pueden mostrar las flechas
+  const canScrollLeft = () => {
+    if (faqScrollRef.current) {
+      return faqScrollRef.current.scrollLeft > 0;
+    }
+    return false;
+  };
+
+  const canScrollRight = () => {
+    if (faqScrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = faqScrollRef.current;
+      return scrollLeft < scrollWidth - clientWidth - 10; // 10px de margen
+    }
+    return false;
+  };
+
+  // Efecto para detectar cuando se puede mostrar las flechas
+  useEffect(() => {
+    const checkScrollButtons = () => {
+      setCanScrollLeftState(canScrollLeft());
+      setCanScrollRightState(canScrollRight());
+    };
+
+    if (faqScrollRef.current) {
+      checkScrollButtons();
+      faqScrollRef.current.addEventListener('scroll', checkScrollButtons);
+      window.addEventListener('resize', checkScrollButtons);
+    }
+
+    return () => {
+      if (faqScrollRef.current) {
+        faqScrollRef.current.removeEventListener('scroll', checkScrollButtons);
+      }
+      window.removeEventListener('resize', checkScrollButtons);
+    };
+  }, [predefinedQuestions]);
 
   // Función para prevenir scroll automático hacia abajo
   const preventAutoScrollDown = () => {
@@ -306,27 +365,6 @@ const ChatInterface = ({
       <div className="top-section">
         {/* Input Area */}
         <div className="input-area">
-          {/* FAQ Section - Preguntas como botones individuales */}
-          {predefinedQuestions && predefinedQuestions.length > 0 && (
-            <div className="faq-section">
-              <div className="faq-questions-grid">
-                {predefinedQuestions.map((question, index) => (
-                  <button
-                    key={question.id}
-                    onClick={() => handleFaqQuestionClick(question.question)}
-                    disabled={isProcessing}
-                    className="faq-question-button"
-                  >
-                    <div className="faq-question-content">
-                      <span className="faq-number">{index + 1}</span>
-                      <span className="faq-text">{question.text}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="input-form">
             <div className="input-container">
               <input
@@ -365,6 +403,46 @@ const ChatInterface = ({
             </div>
           </form>
         </div>
+
+        {/* FAQ Section - Preguntas como botones individuales */}
+        {predefinedQuestions && predefinedQuestions.length > 0 && (
+          <div className="faq-section">
+            <div className="faq-questions-grid" ref={faqScrollRef}>
+              {predefinedQuestions.map((question, index) => (
+                <button
+                  key={question.id}
+                  onClick={() => handleFaqQuestionClick(question.question)}
+                  disabled={isProcessing}
+                  className="faq-question-button"
+                >
+                  <div className="faq-question-content">
+                    <span className="faq-text">{question.text}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+            {canScrollLeftState && (
+              <button
+                className="faq-nav-button left-faq-nav"
+                onClick={() => scrollFaq('left')}
+                aria-label="Ir a la izquierda"
+                title="Ir a la izquierda"
+              >
+                <MdChevronLeft size={24} />
+              </button>
+            )}
+            {canScrollRightState && (
+              <button
+                className="faq-nav-button right-faq-nav"
+                onClick={() => scrollFaq('right')}
+                aria-label="Ir a la derecha"
+                title="Ir a la derecha"
+              >
+                <MdChevronRight size={24} />
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Messages Area - REVERSE CHAT */}
