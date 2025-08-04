@@ -302,139 +302,131 @@
 /* FAQ Section Styles */
 .faq-section {
   position: relative;
+  margin-bottom: 0.5rem;
 }
 
-.faq-toggle-button {
+.faq-questions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.4rem;
+  padding: 0.2rem;
+}
+
+.faq-question-button {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-  color: white;
-  border: none;
-  border-radius: 25px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #e9ecef;
+  background: white;
+  color: #333;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
-  width: 100%;
-  justify-content: center;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  min-height: 45px;
+  position: relative;
+  overflow: hidden;
 }
 
-.faq-toggle-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4);
-  background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+.faq-question-button:hover:not(:disabled) {
+  border-color: #e74c3c;
+  background: #fff5f5;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.15);
 }
 
-.faq-toggle-button:disabled {
+.faq-question-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(231, 76, 60, 0.2);
+}
+
+.faq-question-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
-.faq-toggle-button svg {
-  width: 18px;
-  height: 18px;
-}
-
-/* FAQ Dropdown */
-.faq-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: white;
-  border: 2px solid #e74c3c;
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-  margin-top: 0.5rem;
-  max-height: 400px;
-  overflow-y: auto;
-  animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.faq-header {
-  padding: 1rem;
-  border-bottom: 1px solid #e9ecef;
-  background: #f8f9fa;
-  border-radius: 13px 13px 0 0;
-}
-
-.faq-header h4 {
-  margin: 0 0 0.5rem 0;
-  color: #333;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.faq-header p {
-  margin: 0;
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.faq-questions {
-  padding: 0.5rem;
-}
-
-.faq-question-item {
+.faq-question-content {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  align-items: flex-start;
+  gap: 0.4rem;
   width: 100%;
-  padding: 1rem;
-  border: none;
-  background: transparent;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-radius: 10px;
-  text-align: left;
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
-.faq-question-item:hover:not(:disabled) {
-  background: #f8f9fa;
-  transform: translateX(5px);
-}
-
-.faq-question-item:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .faq-number {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  background: #e74c3c;
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
   color: white;
   border-radius: 50%;
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 0.65rem;
   flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(231, 76, 60, 0.3);
 }
 
 .faq-text {
   flex: 1;
   font-weight: 500;
+  color: #333;
+  word-wrap: break-word;
+  hyphens: auto;
+  font-size: 0.7rem;
+  line-height: 1.1;
+}
+
+/* Responsive adjustments for FAQ buttons */
+@media (max-width: 768px) {
+  .faq-questions-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.3rem;
+    padding: 0.15rem;
+  }
+  
+  .faq-question-button {
+    padding: 0.4rem;
+    font-size: 0.7rem;
+    min-height: 40px;
+  }
+  
+  .faq-number {
+    width: 20px;
+    height: 20px;
+    font-size: 0.6rem;
+  }
+  
+  .faq-text {
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .faq-questions-grid {
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 0.25rem;
+  }
+  
+  .faq-question-button {
+    padding: 0.35rem;
+    font-size: 0.65rem;
+    min-height: 35px;
+  }
+  
+  .faq-number {
+    width: 18px;
+    height: 18px;
+    font-size: 0.55rem;
+  }
+  
+  .faq-text {
+    font-size: 0.6rem;
+  }
 }
 
 .input-form {

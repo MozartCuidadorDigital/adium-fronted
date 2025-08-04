@@ -9,10 +9,7 @@ import {
   MdMic,
   MdSend,
   MdClose,
-  MdReplay,
-  MdExpandMore,
-  MdExpandLess,
-  MdQuestionAnswer
+  MdReplay
 } from 'react-icons/md';
 import './ChatInterface.css';
 
@@ -31,7 +28,6 @@ const ChatInterface = ({
   const [inputText, setInputText] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [isAutoSending, setIsAutoSending] = useState(false);
-  const [showFaq, setShowFaq] = useState(false);
   const messagesEndRef = useRef(null);
   const messagesAreaRef = useRef(null);
   const inputRef = useRef(null);
@@ -300,13 +296,8 @@ const ChatInterface = ({
     }
   };
 
-  const handleFaqToggle = () => {
-    setShowFaq(!showFaq);
-  };
-
   const handleFaqQuestionClick = (question) => {
     onPredefinedQuestion(question);
-    setShowFaq(false); // Cerrar el FAQ después de seleccionar
   };
 
   return (
@@ -315,42 +306,24 @@ const ChatInterface = ({
       <div className="top-section">
         {/* Input Area */}
         <div className="input-area">
-          {/* FAQ Button */}
+          {/* FAQ Section - Preguntas como botones individuales */}
           {predefinedQuestions && predefinedQuestions.length > 0 && (
             <div className="faq-section">
-              <button
-                onClick={handleFaqToggle}
-                disabled={isProcessing}
-                className="faq-toggle-button"
-                title="Preguntas Frecuentes"
-              >
-                <MdQuestionAnswer size={20} />
-                <span>Preguntas Frecuentes</span>
-                {showFaq ? <MdExpandLess size={20} /> : <MdExpandMore size={20} />}
-              </button>
-              
-              {/* FAQ Dropdown */}
-              {showFaq && (
-                <div className="faq-dropdown">
-                  <div className="faq-header">
-                    <h4>Preguntas Frecuentes sobre Mounjaro</h4>
-                    <p>Selecciona una pregunta para obtener información detallada</p>
-                  </div>
-                  <div className="faq-questions">
-                    {predefinedQuestions.map((question, index) => (
-                      <button
-                        key={question.id}
-                        onClick={() => handleFaqQuestionClick(question.question)}
-                        disabled={isProcessing}
-                        className="faq-question-item"
-                      >
-                        <span className="faq-number">{index + 1}</span>
-                        <span className="faq-text">{question.text}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <div className="faq-questions-grid">
+                {predefinedQuestions.map((question, index) => (
+                  <button
+                    key={question.id}
+                    onClick={() => handleFaqQuestionClick(question.question)}
+                    disabled={isProcessing}
+                    className="faq-question-button"
+                  >
+                    <div className="faq-question-content">
+                      <span className="faq-number">{index + 1}</span>
+                      <span className="faq-text">{question.text}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
