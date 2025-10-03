@@ -7,6 +7,8 @@ const TirzepatidaMenu = ({ onQuestionSelect, isProcessing }) => {
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [isMobile, setIsMobile] = useState(false);
   const menuRef = useRef(null);
+  const touchStartRef = useRef({ x: 0, y: 0, time: 0 });
+  const isScrollingRef = useRef(false);
 
   // Detectar si estamos en móvil
   useEffect(() => {
@@ -123,11 +125,44 @@ const TirzepatidaMenu = ({ onQuestionSelect, isProcessing }) => {
     setIsOpen(false);
   };
 
-  const handleQuestionTouch = (event, question) => {
-    // Prevenir que el evento se propague y cierre el menú
-    event.stopPropagation();
-    event.preventDefault();
-    handleQuestionClick(question);
+  const handleQuestionTouchStart = (event) => {
+    const touch = event.touches[0];
+    touchStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now()
+    };
+    isScrollingRef.current = false;
+  };
+
+  const handleQuestionTouchMove = (event) => {
+    if (!touchStartRef.current) return;
+    
+    const touch = event.touches[0];
+    const deltaX = Math.abs(touch.clientX - touchStartRef.current.x);
+    const deltaY = Math.abs(touch.clientY - touchStartRef.current.y);
+    
+    // Si se mueve más de 10px, consideramos que es scroll
+    if (deltaX > 10 || deltaY > 10) {
+      isScrollingRef.current = true;
+    }
+  };
+
+  const handleQuestionTouchEnd = (event, question) => {
+    // Solo seleccionar si no fue un scroll
+    if (!isScrollingRef.current && touchStartRef.current) {
+      const touchDuration = Date.now() - touchStartRef.current.time;
+      // Solo seleccionar si fue un tap rápido (menos de 500ms)
+      if (touchDuration < 500) {
+        event.stopPropagation();
+        event.preventDefault();
+        handleQuestionClick(question);
+      }
+    }
+    
+    // Resetear referencias
+    touchStartRef.current = null;
+    isScrollingRef.current = false;
   };
 
   return (
@@ -158,12 +193,18 @@ const TirzepatidaMenu = ({ onQuestionSelect, isProcessing }) => {
             <p>Selecciona una pregunta para obtener información detallada:</p>
           </div>
           
-          <div className="tirzepatida-questions-list">
+          <div 
+            className="tirzepatida-questions-list"
+            onTouchStart={handleQuestionTouchStart}
+            onTouchMove={handleQuestionTouchMove}
+          >
             {tirzepatidaQuestions.map((question) => (
               <button
                 key={question.id}
                 onClick={() => handleQuestionClick(question.question)}
-                onTouchEnd={(e) => handleQuestionTouch(e, question.question)}
+                onTouchStart={handleQuestionTouchStart}
+                onTouchMove={handleQuestionTouchMove}
+                onTouchEnd={(e) => handleQuestionTouchEnd(e, question.question)}
                 disabled={isProcessing}
                 className="tirzepatida-question-item"
                 title={question.text}
