@@ -13,6 +13,7 @@ import {
   MdChevronLeft,
   MdChevronRight
 } from 'react-icons/md';
+import TirzepatidaMenu from './TirzepatidaMenu';
 import './ChatInterface.css';
 
 const ChatInterface = ({
@@ -284,18 +285,32 @@ const ChatInterface = ({
         {predefinedQuestions && predefinedQuestions.length > 0 && (
           <div className="faq-section">
             <div className="faq-questions-grid" ref={faqScrollRef}>
-              {predefinedQuestions.map((question, index) => (
-                <button
-                  key={question.id}
-                  onClick={() => handleFaqQuestionClick(question.question)}
-                  disabled={isProcessing}
-                  className="faq-question-button"
-                >
-                  <div className="faq-question-content">
-                    <span className="faq-text">{question.text}</span>
-                  </div>
-                </button>
-              ))}
+              {predefinedQuestions.map((question, index) => {
+                // Si es la pregunta de tirzepatida, mostrar el menú especial
+                if (question.id === 'sobre-tirzepatida') {
+                  return (
+                    <TirzepatidaMenu
+                      key={question.id}
+                      onQuestionSelect={handleFaqQuestionClick}
+                      isProcessing={isProcessing}
+                    />
+                  );
+                }
+                
+                // Para las demás preguntas, mostrar botón normal
+                return (
+                  <button
+                    key={question.id}
+                    onClick={() => handleFaqQuestionClick(question.question)}
+                    disabled={isProcessing}
+                    className="faq-question-button"
+                  >
+                    <div className="faq-question-content">
+                      <span className="faq-text">{question.text}</span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
             {canScrollLeftState && (
               <button

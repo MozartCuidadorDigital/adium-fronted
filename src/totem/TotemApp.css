@@ -4,24 +4,59 @@
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); /* Cambiado de azul a rojo */
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   overflow: hidden;
+  position: relative;
+}
+
+.totem-app::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Header */
 .totem-header {
-  background: linear-gradient(90deg, #f5f5f5 0%, #e8e8e8 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   color: #2c3e50;
-  padding: 0rem 2rem; /* Reducido de 1.5rem a 0.8rem */
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  padding: 0rem 2rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
   z-index: 10;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(231, 76, 60, 0.1);
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 80px;
+  min-height: 90px;
+  backdrop-filter: blur(10px);
+  border-radius: 0 0 20px 20px;
+  margin: 0.5rem 0.5rem 0 0.5rem;
+  overflow: hidden;
+}
+
+.totem-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #e74c3c 0%, #c0392b 50%, #e74c3c 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 200% 0; }
+  50% { background-position: -200% 0; }
 }
 
 .logo-section {
@@ -30,21 +65,54 @@
   gap: 1.5rem;
   position: relative;
   flex: 1;
+  z-index: 2;
 }
 
 .logo {
-  width: 160px; /* Doble del tamaño original (80px) */
-  height: 80px; /* Doble del tamaño original (40px) */
+  width: 180px;
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Eliminado border-radius y box-shadow para quitar el cuadradito */
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 15px;
+  box-shadow: 0 4px 16px rgba(231, 76, 60, 0.15), 0 2px 8px rgba(0,0,0,0.05);
+  border: 2px solid rgba(231, 76, 60, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.logo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(231, 76, 60, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.logo:hover::before {
+  left: 100%;
+}
+
+.logo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(231, 76, 60, 0.2), 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .logo img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  padding: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+  transform: scale(1.05);
 }
 
 .brand {
@@ -55,27 +123,38 @@
   text-align: center;
   width: 100%;
   pointer-events: none;
-  z-index: 1; /* Asegurar que esté por encima */
-  padding-left: 200px; /* Dar espacio al logo */
-  padding-right: 200px; /* Dar espacio a los botones */
+  z-index: 1;
+  padding-left: 220px;
+  padding-right: 220px;
 }
 
 .brand h1 {
   margin: 0;
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.2rem;
+  font-weight: 800;
   color: #2c3e50;
-  text-shadow: none;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  letter-spacing: 0.5px;
 }
 
 .brand p {
   margin: 0;
-  font-size: 1.6rem; /* Reducir un poco para que quepa */
-  color: #34495e; /* Color más oscuro para mayor visibilidad */
-  font-weight: 700; /* Más bold para mayor visibilidad */
-  text-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Sombra sutil para mejor legibilidad */
-  letter-spacing: 0.3px; /* Reducir espaciado */
-  white-space: nowrap; /* Mantener en una línea */
+  font-size: 1.8rem;
+  color: #e74c3c;
+  font-weight: 800;
+  text-shadow: 0 2px 4px rgba(231, 76, 60, 0.3);
+  letter-spacing: 1px;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes textGlow {
+  0% { filter: brightness(1); }
+  100% { filter: brightness(1.1); }
 }
 
 /* Reset Chat Button */
@@ -91,22 +170,39 @@
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
-  min-height: 44px;
-  min-width: 120px;
-  z-index: 1;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(231, 76, 60, 0.25), 0 2px 8px rgba(0,0,0,0.1);
+  min-height: 48px;
+  min-width: 130px;
+  z-index: 2;
+  position: relative;
+  overflow: hidden;
+}
+
+.reset-chat-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.reset-chat-button:hover::before {
+  left: 100%;
 }
 
 .reset-chat-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(231, 76, 60, 0.35), 0 4px 12px rgba(0,0,0,0.15);
   background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
 }
 
 .reset-chat-button:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
 }
 
 .reset-chat-button svg {
@@ -132,23 +228,40 @@
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
-  min-height: 44px;
-  min-width: 120px;
-  z-index: 1;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(108, 117, 125, 0.25), 0 2px 8px rgba(0,0,0,0.1);
+  min-height: 48px;
+  min-width: 130px;
+  z-index: 2;
   margin-left: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.logout-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.logout-button:hover::before {
+  left: 100%;
 }
 
 .logout-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(108, 117, 125, 0.4);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(108, 117, 125, 0.35), 0 4px 12px rgba(0,0,0,0.15);
   background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
 }
 
 .logout-button:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
 }
 
 .logout-button svg {
@@ -166,21 +279,40 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 0.8rem; /* Reducido de 1.5rem */
-  gap: 0.8rem; /* Reducido de 1.5rem */
+  padding: 0.8rem;
+  gap: 0.8rem;
   overflow: hidden;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 20px 20px 0 0;
+  margin: 0 0.5rem 0.5rem 0.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 /* Chat Container */
 .chat-container {
   flex: 1;
-  background: white;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  border: 1px solid rgba(231, 76, 60, 0.1);
+  position: relative;
+}
+
+.chat-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #e74c3c 0%, #c0392b 50%, #e74c3c 100%);
+  background-size: 200% 100%;
+  animation: shimmer 4s ease-in-out infinite;
 }
 
 /* Main Screen Styles */
@@ -235,27 +367,115 @@
 .start-app-button {
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   color: #e74c3c;
-  border: none;
-  padding: 1.5rem 4rem;
-  font-size: 1.5rem;
-  font-weight: 700;
-  border-radius: 50px;
+  border: 3px solid #e74c3c;
+  padding: 1.8rem 5rem;
+  font-size: 1.6rem;
+  font-weight: 800;
+  border-radius: 60px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 12px 40px rgba(231, 76, 60, 0.3), 0 4px 16px rgba(0,0,0,0.1);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.start-app-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(231, 76, 60, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.start-app-button:hover::before {
+  left: 100%;
 }
 
 .start-app-button:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: 0 20px 60px rgba(231, 76, 60, 0.4), 0 8px 24px rgba(0,0,0,0.15);
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border-color: #c0392b;
 }
 
 .start-app-button:active {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(231, 76, 60, 0.3);
+}
+
+/* Específico para tótem vertical - pantallas estrechas y altas */
+@media (max-width: 480px) and (orientation: portrait) {
+  .totem-app {
+    height: 100vh;
+    width: 100vw;
+  }
+  
+  .totem-header {
+    padding: 0.3rem 0.5rem;
+    min-height: 50px;
+    margin: 0.2rem 0.2rem 0 0.2rem;
+    border-radius: 0 0 15px 15px;
+  }
+  
+  .logo-section {
+    gap: 0.3rem;
+  }
+  
+  .logo {
+    width: 60px;
+    height: 30px;
+  }
+  
+  .brand p {
+    font-size: 0.8rem;
+    letter-spacing: 0.2px;
+  }
+  
+  .reset-chat-button,
+  .logout-button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+    min-width: 60px;
+    min-height: 30px;
+  }
+  
+  .totem-main {
+    padding: 0.3rem;
+    gap: 0.3rem;
+    margin: 0 0.2rem 0.2rem 0.2rem;
+  }
+  
+  .chat-container {
+    border-radius: 12px;
+  }
+  
+  .main-screen-content {
+    padding: 1rem;
+  }
+  
+  .main-logo {
+    width: 100px;
+    height: 50px;
+    margin-bottom: 1rem;
+  }
+  
+  .main-brand p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .start-app-button {
+    padding: 1rem 2.5rem;
+    font-size: 1rem;
+    border-radius: 40px;
+  }
 }
 
 /* Responsive Design */
@@ -297,24 +517,66 @@
 @media (max-width: 768px) {
   .totem-header {
     padding: 0.5rem 1rem;
-    min-height: 60px;
+    min-height: 70px;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .logo-section {
+    order: 1;
+    flex: 1;
+    justify-content: flex-start;
+    gap: 0.5rem;
   }
   
   .logo {
-    width: 120px;
-    height: 60px;
+    width: 80px;
+    height: 40px;
   }
   
   .brand {
-    padding-left: 140px; /* Reducir más en móviles */
-    padding-right: 140px;
+    position: static;
+    transform: none;
+    padding: 0;
+    text-align: left;
+    order: 2;
+    flex: 2;
+    margin-left: 0.5rem;
   }
   
   .brand p {
-    font-size: 1.2rem; /* Reducir para móviles */
+    font-size: 1rem;
     font-weight: 700;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.3px;
     white-space: nowrap;
+  }
+  
+  .reset-chat-button,
+  .logout-button {
+    order: 3;
+    margin: 0;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+    min-width: 50px;
+    min-height: 40px;
+    flex-shrink: 0;
+  }
+  
+  .reset-chat-button span,
+  .logout-button span {
+    display: none;
+  }
+  
+  .reset-chat-button svg,
+  .logout-button svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .reset-chat-button {
+    margin-right: 0.3rem;
   }
   
   .reset-chat-button {
@@ -350,6 +612,11 @@
   .totem-main {
     padding: 0.5rem;
     gap: 0.5rem;
+    margin: 0 0.3rem 0.3rem 0.3rem;
+  }
+  
+  .chat-container {
+    border-radius: 15px;
   }
 
   .main-logo {
@@ -372,24 +639,55 @@
 @media (max-width: 480px) {
   .totem-header {
     padding: 0.4rem 0.8rem;
-    min-height: 50px;
+    min-height: 60px;
+    flex-direction: row;
+    gap: 0.3rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .logo-section {
+    order: 1;
+    flex: 1;
+    justify-content: flex-start;
+    gap: 0.3rem;
   }
   
   .logo {
-    width: 100px;
-    height: 50px;
+    width: 60px;
+    height: 30px;
   }
   
   .brand {
-    padding-left: 120px; /* Reducir más en móviles pequeños */
-    padding-right: 120px;
+    position: static;
+    transform: none;
+    padding: 0;
+    text-align: left;
+    order: 2;
+    flex: 2;
+    margin-left: 0.3rem;
   }
   
   .brand p {
-    font-size: 1rem; /* Reducir para móviles pequeños */
+    font-size: 0.8rem;
     font-weight: 700;
-    letter-spacing: 0.1px;
+    letter-spacing: 0.2px;
     white-space: nowrap;
+  }
+  
+  .reset-chat-button,
+  .logout-button {
+    order: 3;
+    margin: 0;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+    min-width: 40px;
+    min-height: 36px;
+    flex-shrink: 0;
+  }
+  
+  .reset-chat-button {
+    margin-right: 0.2rem;
   }
   
   .reset-chat-button {
@@ -447,7 +745,19 @@
 
 /* Smooth animations */
 .totem-app * {
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Add shimmer animation to keyframes */
+@keyframes shimmer {
+  0%, 100% { background-position: 200% 0; }
+  50% { background-position: -200% 0; }
+}
+
+/* Add text glow animation */
+@keyframes textGlow {
+  0% { filter: brightness(1); }
+  100% { filter: brightness(1.1); }
 }
 
 /* Loading states */
