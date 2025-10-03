@@ -24,13 +24,17 @@ const TirzepatidaMenu = ({ onQuestionSelect, isProcessing }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isOpen && isMobile && menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsOpen(false);
+        // Solo cerrar si no es un evento de scroll
+        if (event.type === 'mousedown' || (event.type === 'touchstart' && !event.target.closest('.tirzepatida-questions-list'))) {
+          setIsOpen(false);
+        }
       }
     };
 
     if (isOpen && isMobile) {
       document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('touchstart', handleClickOutside);
+      // Solo usar touchstart para clicks fuera del área de scroll
+      document.addEventListener('touchstart', handleClickOutside, { passive: true });
     }
 
     return () => {
@@ -119,6 +123,13 @@ const TirzepatidaMenu = ({ onQuestionSelect, isProcessing }) => {
     setIsOpen(false);
   };
 
+  const handleQuestionTouch = (event, question) => {
+    // Prevenir que el evento se propague y cierre el menú
+    event.stopPropagation();
+    event.preventDefault();
+    handleQuestionClick(question);
+  };
+
   return (
     <>
       <div className="tirzepatida-menu" ref={menuRef}>
@@ -152,6 +163,7 @@ const TirzepatidaMenu = ({ onQuestionSelect, isProcessing }) => {
               <button
                 key={question.id}
                 onClick={() => handleQuestionClick(question.question)}
+                onTouchEnd={(e) => handleQuestionTouch(e, question.question)}
                 disabled={isProcessing}
                 className="tirzepatida-question-item"
                 title={question.text}
