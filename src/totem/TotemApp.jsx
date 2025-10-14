@@ -224,8 +224,48 @@ const TotemApp = () => {
   //   });
   // };
 
-  const handlePredefinedQuestion = (question) => {
-    handleQuestionSubmit(question);
+  const handlePredefinedQuestion = (questionData) => {
+    // Si es una pregunta con datos completos (imagen, audio, respuesta)
+    if (typeof questionData === 'object' && questionData.question) {
+      console.log('🎯 Pregunta predefinida con datos completos:', questionData);
+      
+      // Agregar mensaje del usuario
+      const userMessage = {
+        id: Date.now(),
+        type: 'user',
+        text: questionData.question,
+        timestamp: Date.now()
+      };
+      
+      // Agregar respuesta del asistente con imagen y audio si están disponibles
+      const assistantMessage = {
+        id: Date.now() + 1,
+        type: 'assistant',
+        text: '', // No enviar texto al frontend
+        timestamp: Date.now() + 1,
+        image: questionData.image || null,
+        audioUrl: questionData.audioUrl || null
+      };
+      
+      setMessages(prev => [...prev, userMessage, assistantMessage]);
+      
+      // Reproducir audio si está disponible
+      if (questionData.audioUrl && audioRef.current) {
+        console.log('🎵 Reproduciendo audio de pregunta predefinida...');
+        audioRef.current.src = questionData.audioUrl;
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.error('Error reproduciendo audio:', error);
+          });
+        }
+        setIsPlaying(true);
+        setCurrentAudioUrl(questionData.audioUrl);
+      }
+    } else {
+      // Si es solo texto, usar el flujo normal
+      handleQuestionSubmit(questionData);
+    }
   };
 
   const handleClearChat = () => {

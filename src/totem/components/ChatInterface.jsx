@@ -14,6 +14,7 @@ import {
   MdChevronRight
 } from 'react-icons/md';
 import TirzepatidaMenu from './TirzepatidaMenu';
+import TirzepatidaStudiesMenu from './TirzepatidaStudiesMenu';
 import './ChatInterface.css';
 
 const ChatInterface = ({
@@ -232,8 +233,8 @@ const ChatInterface = ({
     }
   };
 
-  const handleFaqQuestionClick = (question) => {
-    onPredefinedQuestion(question);
+  const handleFaqQuestionClick = (questionData) => {
+    onPredefinedQuestion(questionData);
   };
 
   return (
@@ -286,14 +287,19 @@ const ChatInterface = ({
           <div className="faq-section">
             <div className="faq-questions-grid" ref={faqScrollRef}>
               {predefinedQuestions.map((question, index) => {
-                // Si es la pregunta de tirzepatida, mostrar el menú especial
+                // Si es la pregunta de tirzepatida, mostrar ambos menús juntos
                 if (question.id === 'sobre-tirzepatida') {
                   return (
-                    <TirzepatidaMenu
-                      key={question.id}
-                      onQuestionSelect={handleFaqQuestionClick}
-                      isProcessing={isProcessing}
-                    />
+                    <React.Fragment key={question.id}>
+                      <TirzepatidaMenu
+                        onQuestionSelect={handleFaqQuestionClick}
+                        isProcessing={isProcessing}
+                      />
+                      <TirzepatidaStudiesMenu
+                        onQuestionSelect={handleFaqQuestionClick}
+                        isProcessing={isProcessing}
+                      />
+                    </React.Fragment>
                   );
                 }
                 
@@ -356,6 +362,16 @@ const ChatInterface = ({
             className={`message ${message.type}`}
           >
             <div className="message-content">
+              {/* Mostrar imagen si existe */}
+              {message.image && (
+                <div className="message-image">
+                  <img 
+                    src={message.image} 
+                    alt="Imagen de la respuesta" 
+                    className="response-image"
+                  />
+                </div>
+              )}
               <div className="message-text">
                 {renderTextWithLineBreaks(message.text)}
               </div>
