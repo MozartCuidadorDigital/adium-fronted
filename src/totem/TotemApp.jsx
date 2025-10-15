@@ -241,7 +241,7 @@ const TotemApp = () => {
       const assistantMessage = {
         id: Date.now() + 1,
         type: 'assistant',
-        text: '', // No enviar texto al frontend
+        text: questionData.text || '',
         timestamp: Date.now() + 1,
         image: questionData.image || null,
         audioUrl: questionData.audioUrl || null

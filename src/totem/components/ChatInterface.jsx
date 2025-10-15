@@ -203,12 +203,49 @@ const ChatInterface = ({
   const renderTextWithLineBreaks = (text) => {
     if (!text) return '';
 
-    return text.split('\n').map((line, index) => (
-      <React.Fragment key={index}>
-        {renderMarkdown(line)}
-        {index < text.split('\n').length - 1 && <br />}
-      </React.Fragment>
-    ));
+    // Primero dividir por saltos de línea normales
+    const lines = text.split('\n');
+    
+    return lines.map((line, lineIndex) => {
+      // Para cada línea, dividir por puntos bullet (•)
+      const bulletParts = line.split('•');
+      
+      // Si hay puntos bullet en esta línea
+      if (line.includes('•') && bulletParts.length > 1) {
+        return (
+          <React.Fragment key={lineIndex}>
+            {bulletParts.map((bulletText, bulletIndex) => {
+              const trimmedText = bulletText.trim();
+              if (!trimmedText) return null;
+              
+              return (
+                <React.Fragment key={`${lineIndex}-${bulletIndex}`}>
+                  {bulletIndex === 0 ? (
+                    // Primera parte (antes del primer bullet)
+                    <span>{renderMarkdown(trimmedText)}</span>
+                  ) : (
+                    // Partes con bullet
+                    <>
+                      <br />
+                      <span className="bullet-point">• {renderMarkdown(trimmedText)}</span>
+                    </>
+                  )}
+                </React.Fragment>
+              );
+            })}
+            {lineIndex < lines.length - 1 && <br />}
+          </React.Fragment>
+        );
+      }
+      
+      // Si no hay bullets, renderizar normalmente
+      return (
+        <React.Fragment key={lineIndex}>
+          {renderMarkdown(line)}
+          {lineIndex < lines.length - 1 && <br />}
+        </React.Fragment>
+      );
+    });
   };
 
   const renderMarkdown = (text) => {
@@ -362,7 +399,11 @@ const ChatInterface = ({
             className={`message ${message.type}`}
           >
             <div className="message-content">
-              {/* Mostrar imagen si existe */}
+              {/* Mostrar texto primero */}
+              <div className="message-text">
+                {renderTextWithLineBreaks(message.text)}
+              </div>
+              {/* Mostrar imagen después del texto */}
               {message.image && (
                 <div className="message-image">
                   <img 
@@ -372,9 +413,6 @@ const ChatInterface = ({
                   />
                 </div>
               )}
-              <div className="message-text">
-                {renderTextWithLineBreaks(message.text)}
-              </div>
               <div className="message-footer">
                 <div className="message-time">
                   {formatTime(message.timestamp)}
