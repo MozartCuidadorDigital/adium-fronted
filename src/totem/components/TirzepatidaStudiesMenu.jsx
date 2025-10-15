@@ -245,8 +245,8 @@ const TirzepatidaStudiesMenu = ({ onQuestionSelect, isProcessing }) => {
     setIsOpen(false);
     
     try {
-      // Llamar al nuevo endpoint de estudios
-      const response = await fetch('/api/tirzepatida-studies/question', {
+      // Llamar al nuevo endpoint de estudios - DIRECTO AL BACKEND
+      const response = await fetch('https://adium-backend.mozartai.com.co/api/tirzepatida-studies/question', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
